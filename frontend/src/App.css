@@ -1,0 +1,112 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background-color: #282c34;
+  color: white;
+}
+
+.App-header {
+  padding: 2rem;
+}
+
+.mosaic-panel {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: #3a3f47;
+  padding: 1.5rem;
+  border-radius: 12px;
+  min-width: 150px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.card p {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.weather-table {
+  width: 80%;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  background-color: #3a3f47;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+.weather-table th,
+.weather-table td {
+  border: 1px solid #555;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.weather-table thead {
+  background-color: #4a4f57;
+  color: #fff;
+}
+
+.weather-table tbody tr:nth-child(even) {
+  background-color: #444950;
+}
+
+.weather-table tfoot {
+  background-color: #2e333a;
+  font-weight: bold;
+}
+
+.weather-table th,
+.weather-table td {
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+}
+
+.alertas {
+  color: #ff4d4d;
+  background-color: #2d0000;
+  border: 1px solid #ff0000;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem auto;
+  width: 80%;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.mosaic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.mosaic-title {
+  font-weight: bold;
+  font-size: 18px;
+  padding-left: 5%;
+}
+
+.mosaic-timestamp {
+  font-style: italic;
+}

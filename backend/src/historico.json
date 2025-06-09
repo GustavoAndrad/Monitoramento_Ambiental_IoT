@@ -1,0 +1,72 @@
+[
+  {
+    "timestamp": "08/06/2025, 23:06:57",
+    "iso": "2025-06-09T02:06:57.743Z",
+    "temperatura": 29,
+    "umidade": 39,
+    "vento": 22
+  },
+  {
+    "timestamp": "08/06/2025, 23:05:57",
+    "iso": "2025-06-09T02:05:57.742Z",
+    "temperatura": 28,
+    "umidade": 79,
+    "vento": 2
+  },
+  {
+    "timestamp": "08/06/2025, 23:04:57",
+    "iso": "2025-06-09T02:04:57.735Z",
+    "temperatura": 24,
+    "umidade": 28,
+    "vento": 33
+  },
+  {
+    "timestamp": "08/06/2025, 23:03:57",
+    "iso": "2025-06-09T02:03:57.728Z",
+    "temperatura": 28,
+    "umidade": 32,
+    "vento": 27
+  },
+  {
+    "timestamp": "08/06/2025, 23:02:57",
+    "iso": "2025-06-09T02:02:57.728Z",
+    "temperatura": 15,
+    "umidade": 74,
+    "vento": 16
+  },
+  {
+    "timestamp": "08/06/2025, 23:01:57",
+    "iso": "2025-06-09T02:01:57.725Z",
+    "temperatura": 34,
+    "umidade": 54,
+    "vento": 18
+  },
+  {
+    "timestamp": "08/06/2025, 23:00:57",
+    "iso": "2025-06-09T02:00:57.714Z",
+    "temperatura": 27,
+    "umidade": 65,
+    "vento": 31
+  },
+  {
+    "timestamp": "08/06/2025, 22:59:57",
+    "iso": "2025-06-09T01:59:57.708Z",
+    "temperatura": 37,
+    "umidade": 73,
+    "vento": 8
+  },
+  {
+    "timestamp": "08/06/2025, 22:58:57",
+    "iso": "2025-06-09T01:58:57.694Z",
+    "temperatura": 22,
+    "umidade": 47,
+    "vento": 34
+  },
+  {
+    "timestamp": "08/06/2025, 22:57:57",
+    "iso": "2025-06-09T01:57:57.686Z",
+    "temperatura": 23,
+    "umidade": 74,
+    "vento": 28
+  }
+]
