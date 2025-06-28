@@ -87,7 +87,7 @@ function App() {
             <p>{weatherData.vento}</p>
           </div>
         </div>
-
+        {/*modificar*/}
         <h3>Últimas {historico.length} medições</h3>
         <table className="weather-table">
           <thead>
