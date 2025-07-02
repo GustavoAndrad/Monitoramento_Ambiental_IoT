@@ -100,7 +100,7 @@ setInterval(async () => {
     };
 
     historico.unshift(novaLeitura);
-    historico.splice(10);
+    historico.splice(100);
     salvarHistorico(historico);
 
     try {

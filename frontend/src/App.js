@@ -6,8 +6,72 @@ import { useMqtt } from './useMqtt.js';
 
 function App() {
   const alertas = useAlertas();
+  const { subscribe, historico } = useMqtt();
+  
 
-  const { subscribe, historico } = useMqtt(); // ✅ chamada única
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [filtroAtivo, setFiltroAtivo] = useState('todos'); 
+  const itensPorPagina = 10;
+
+function parseDataLocal(timestamp) {
+  if (!timestamp || typeof timestamp !== 'string') return new Date('Invalid');
+  const [data, hora] = timestamp.split(', ');
+  if (!data || !hora) return new Date('Invalid');
+
+  const [dia, mes, ano] = data.split('/');
+  if (!dia || !mes || !ano) return new Date('Invalid');
+
+  return new Date(`${ano}-${mes}-${dia}T${hora}`);
+}
+
+// filtra o histórico 
+const filtrarHistorico = () => {
+  const agora = new Date();
+  const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+  const seteDiasAtras = new Date(agora);
+  seteDiasAtras.setDate(agora.getDate() - 7);
+  const trintaDiasAtras = new Date(agora);
+  trintaDiasAtras.setDate(agora.getDate() - 30);
+
+  return historico.filter(item => {
+    if (!item.timestamp) return false;
+
+    try {
+      const dataItem = parseDataLocal(item.timestamp);
+      if (isNaN(dataItem.getTime())) return false;
+
+      switch (filtroAtivo) {
+        case 'hoje':
+          return dataItem >= hoje;
+        case '7dias':
+          return dataItem >= seteDiasAtras;
+        case '30dias':
+          return dataItem >= trintaDiasAtras;
+        default:
+          return true;
+      }
+    } catch (e) {
+      console.error('Erro ao processar data:', item.timestamp, e);
+      return false;
+    }
+  });
+};
+
+
+  const historicoFiltrado = filtrarHistorico();
+
+  const inicio = (paginaAtual - 1) * itensPorPagina;
+  const fim = inicio + itensPorPagina;
+  const itensPagina = historicoFiltrado.slice(inicio, fim);
+  const totalPaginas = Math.ceil(historicoFiltrado.length / itensPorPagina);
+
+  const irParaPagina = (pagina) => {
+    setPaginaAtual(pagina);
+  };
+
+  useEffect(() => {
+    setPaginaAtual(1);
+  }, [filtroAtivo]);
 
   useEffect(() => {
     subscribe('clima/historico', (payload) => {
@@ -15,6 +79,7 @@ function App() {
         const dados = Array.isArray(payload) ? payload : JSON.parse(payload);
         if (Array.isArray(dados)) {
           console.log('[App] Histórico atualizado via MQTT');
+          setPaginaAtual(1);
         }
       } catch (err) {
         console.error('Erro ao processar histórico MQTT:', err);
@@ -32,7 +97,7 @@ function App() {
   }, [subscribe]);
 
   function calcularMedia(sensor) {
-    const valores = historico
+    const valores = historicoFiltrado
       .map(item => item[sensor])
       .filter(v => v !== null && v !== undefined);
     if (valores.length === 0) return '-';
@@ -87,8 +152,36 @@ function App() {
             <p>{weatherData.vento}</p>
           </div>
         </div>
-        {/*modificar*/}
-        <h3>Últimas {historico.length} medições</h3>
+
+        <div className="filtros-container">
+          <button 
+            className={`filtro-btn ${filtroAtivo === 'todos' ? 'active' : ''}`}
+            onClick={() => setFiltroAtivo('todos')}
+          >
+            Todos
+          </button>
+          <button 
+            className={`filtro-btn ${filtroAtivo === 'hoje' ? 'active' : ''}`}
+            onClick={() => setFiltroAtivo('hoje')}
+          >
+            Hoje
+          </button>
+          <button 
+            className={`filtro-btn ${filtroAtivo === '7dias' ? 'active' : ''}`}
+            onClick={() => setFiltroAtivo('7dias')}
+          >
+            Últimos 7 dias
+          </button>
+          <button 
+            className={`filtro-btn ${filtroAtivo === '30dias' ? 'active' : ''}`}
+            onClick={() => setFiltroAtivo('30dias')}
+          >
+            Últimos 30 dias
+          </button>
+        </div>
+
+        <h3>Últimas {historicoFiltrado.length} medições (Página {paginaAtual} de {totalPaginas})</h3>
+        
         <table className="weather-table">
           <thead>
             <tr>
@@ -100,9 +193,9 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {historico.map((item, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
+            {itensPagina.map((item, index) => (
+              <tr key={inicio + index}>
+                <td>{inicio + index + 1}</td>
                 <td>{item.timestamp}</td>
                 <td>{item.temperatura ?? '-'}</td>
                 <td>{item.umidade ?? '-'}</td>
@@ -110,7 +203,7 @@ function App() {
               </tr>
             ))}
           </tbody>
-          {historico.length > 0 && (
+          {historicoFiltrado.length > 0 && (
             <tfoot>
               <tr>
                 <td colSpan="2"><strong>Média</strong></td>
@@ -121,6 +214,26 @@ function App() {
             </tfoot>
           )}
         </table>
+
+        <div className="paginacao-container">
+          <button 
+            onClick={() => irParaPagina(paginaAtual - 1)} 
+            disabled={paginaAtual === 1}
+            className="paginacao-btn"
+          >
+            Anterior
+          </button>
+          
+          <span className="paginacao-info">Página {paginaAtual} de {totalPaginas}</span>
+          
+          <button 
+            onClick={() => irParaPagina(paginaAtual + 1)} 
+            disabled={paginaAtual === totalPaginas || totalPaginas === 0}
+            className="paginacao-btn"
+          >
+            Próxima
+          </button>
+        </div>
       </header>
     </div>
   );
