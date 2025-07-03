@@ -3,11 +3,10 @@ import mqtt from 'mqtt';
 import { climaSubject } from './climaSubject';
 
 export function useMqtt() {
-  const [historico, setHistorico] = useState([]);
+  const [ultimoDado, setUltimoDado] = useState(null);
+  const leituraParcialRef = useRef({});
   const clientRef = useRef(null);
   const subscriptions = useRef({});
-  //buffer
-  const leituraParcialRef = useRef({});
 
   useEffect(() => {
     const client = mqtt.connect('wss://b35611364f10443eb840648d6c93f42d.s1.eu.hivemq.cloud:8884/mqtt', {
@@ -23,54 +22,46 @@ export function useMqtt() {
       client.subscribe('clima/temperatura');
       client.subscribe('clima/umidade');
       client.subscribe('clima/vento');
-      client.subscribe('clima/leituras/historico');
     });
 
+
     client.on('message', (topic, message) => {
-      const payload = JSON.parse(message.toString());
+      try {
+        const payload = JSON.parse(message.toString());
+        const { valor, timestamp, iso } = payload;
 
-      if (topic === 'clima/leituras/historico') {
-        setHistorico(payload);
-        console.log('[MQTT] Histórico recebido:', payload);
-      }
+        const parcial = leituraParcialRef.current[iso] || { timestamp, iso };
 
-      if (['clima/temperatura', 'clima/umidade', 'clima/vento'].includes(topic)) {
-        const {valor, timestamp, iso} = payload;
-        const parcial = leituraParcialRef.current[iso] || { timestamp, iso};
-
-        if(topic === 'clima/temperatura') parcial.temperatura = valor;
-        if(topic === 'clima/umidade') parcial.umidade = valor;
-        if(topic === 'clima/vento') parcial.vento = valor;
+        if (topic === 'clima/temperatura') parcial.temperatura = valor;
+        if (topic === 'clima/umidade') parcial.umidade = valor;
+        if (topic === 'clima/vento') parcial.vento = valor;
 
         leituraParcialRef.current[iso] = parcial;
 
-        if ( parcial.temperatura !== undefined && parcial.umidade !== undefined && parcial.vento !== undefined) {
-          setHistorico(prev => {
-            const novo = [parcial, ...prev];
-            const atualizado = novo
-            .filter((item, index, self) => index === self.findIndex(i => i.iso === item.iso))
-            .slice(0,10);
-            climaSubject.notify(parcial);
-            return atualizado;
-          });
-          console.log('[MQTT] Nova leitura recebida');
+       if ( parcial.temperatura !== undefined && parcial.umidade !== undefined && parcial.vento !== undefined) {
+          setUltimoDado(parcial);
+          console.log(1);
+          climaSubject.notify(parcial);
           delete leituraParcialRef.current[iso];
+          console.log('[MQTT] Leitura completa recebida:', parcial);
         }
-        return;
-      }
 
-      if (subscriptions.current[topic]) {
-        subscriptions.current[topic].forEach(cb => cb(payload));
+        if (subscriptions.current[topic]) {
+          subscriptions.current[topic].forEach(cb => cb(payload));
+        }
+
+      } catch (err) {
+        console.error('[MQTT] Erro ao processar mensagem:', err);
       }
     });
 
     client.on('error', err => {
-      console.error('[MQTT] Erro:', err);
+      console.error('[MQTT] Erro na conexão:', err);
     });
 
     return () => client.end();
   }, []);
-
+/*
   function subscribe(topic, callback) {
     if (!subscriptions.current[topic]) {
       subscriptions.current[topic] = [];
@@ -80,6 +71,6 @@ export function useMqtt() {
     }
     subscriptions.current[topic].push(callback);
   }
-
-  return { historico, subscribe };
+*/
+  return { ultimoDado/*, subscribe */};
 }

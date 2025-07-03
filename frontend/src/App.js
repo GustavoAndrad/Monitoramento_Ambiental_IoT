@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { climaSubject } from './climaSubject.js';
 import { useAlertas } from './useAlertas.js';
 import { useMqtt } from './useMqtt.js';
 
 function App() {
   const alertas = useAlertas();
-  const { subscribe, historico } = useMqtt();
-  
+  const { ultimoDado } = useMqtt();
+
+  //Busca o histórico no servidor (Sem MQTT)
+  const [historico, setHistorico] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:5027/historico')
+      .then(res => res.json())
+      .then(data => setHistorico(data))
+      .catch(err => console.error('Erro ao buscar histórico:', err));
+  }, [historico]);
 
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [filtroAtivo, setFiltroAtivo] = useState('todos'); 
@@ -57,7 +64,6 @@ const filtrarHistorico = () => {
   });
 };
 
-
   const historicoFiltrado = filtrarHistorico();
 
   const inicio = (paginaAtual - 1) * itensPorPagina;
@@ -72,29 +78,6 @@ const filtrarHistorico = () => {
   useEffect(() => {
     setPaginaAtual(1);
   }, [filtroAtivo]);
-
-  useEffect(() => {
-    subscribe('clima/historico', (payload) => {
-      try {
-        const dados = Array.isArray(payload) ? payload : JSON.parse(payload);
-        if (Array.isArray(dados)) {
-          console.log('[App] Histórico atualizado via MQTT');
-          setPaginaAtual(1);
-        }
-      } catch (err) {
-        console.error('Erro ao processar histórico MQTT:', err);
-      }
-    });
-
-    subscribe('clima/atual', (payload) => {
-      try {
-        const novaLeitura = typeof payload === 'object' ? payload : JSON.parse(payload);
-        climaSubject.notify(novaLeitura);
-      } catch (err) {
-        console.error('Erro ao processar leitura atual MQTT:', err);
-      }
-    });
-  }, [subscribe]);
 
   function calcularMedia(sensor) {
     const valores = historicoFiltrado
@@ -111,12 +94,12 @@ const filtrarHistorico = () => {
     vento: calcularMedia('vento'),
   };
 
-  const weatherData = historico[0]
+  const weatherData = ultimoDado
     ? {
-        temperatura: historico[0].temperatura !== null ? `${historico[0].temperatura}°C` : '-',
-        umidade: historico[0].umidade !== null ? `${historico[0].umidade}%` : '-',
-        vento: historico[0].vento !== null ? `${historico[0].vento} km/h` : '-',
-        timestamp: historico[0].timestamp,
+        temperatura: ultimoDado.temperatura !== null ? `${ultimoDado.temperatura}°C` : '-',
+        umidade: ultimoDado.umidade !== null ? `${ultimoDado.umidade}%` : '-',
+        vento: ultimoDado.vento !== null ? `${ultimoDado.vento} km/h` : '-',
+        timestamp: ultimoDado.timestamp,
       }
     : { temperatura: '-', umidade: '-', vento: '-', timestamp: '-' };
 

@@ -53,24 +53,4 @@ function publicarNovaLeitura(leitura) {
   return Promise.all(promessas);
 }
 
-function publicarHistorico(historico) {
-  return new Promise((resolve, reject) => {
-    if (!client.connected) {
-      client.once('connect', () => {
-        client.publish('clima/leituras/historico', JSON.stringify(historico), { retain: true }, (err) => {
-          if (err) return reject(err);
-          console.log('[MQTT] Histórico publicado (retain)');
-          resolve();
-        });
-      });
-    } else {
-      client.publish('clima/leituras/historico', JSON.stringify(historico), { retain: true }, (err) => {
-        if (err) return reject(err);
-        console.log('[MQTT] Histórico publicado (retain)');
-        resolve();
-      });
-    }
-  });
-}
-
-module.exports = { publicarNovaLeitura, publicarHistorico };
+module.exports = { publicarNovaLeitura };

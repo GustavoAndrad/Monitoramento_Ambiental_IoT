@@ -1,3 +1,8 @@
+/*
+
+Acho que não está sendo usado
+
+
 const mqtt = require('mqtt');
 
 const client = mqtt.connect('mqtts://b35611364f10443eb840648d6c93f42d.s1.eu.hivemq.cloud', {
@@ -52,3 +57,4 @@ function processarTemperatura(payload) {
   const {valor, timestamp} = payload;
   console.log(`Vento - ${valor}Km/h às ${timestamp}`);
 }
+  */
