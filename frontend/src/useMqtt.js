@@ -6,6 +6,8 @@ export function useMqtt() {
   const [historico, setHistorico] = useState([]);
   const clientRef = useRef(null);
   const subscriptions = useRef({});
+  //buffer
+  const leituraParcialRef = useRef({});
 
   useEffect(() => {
     const client = mqtt.connect('wss://b35611364f10443eb840648d6c93f42d.s1.eu.hivemq.cloud:8884/mqtt', {
@@ -18,7 +20,9 @@ export function useMqtt() {
 
     client.on('connect', () => {
       console.log('[MQTT] Conectado');
-      client.subscribe('clima/leituras');
+      client.subscribe('clima/temperatura');
+      client.subscribe('clima/umidade');
+      client.subscribe('clima/vento');
       client.subscribe('clima/leituras/historico');
     });
 
@@ -30,20 +34,29 @@ export function useMqtt() {
         console.log('[MQTT] Histórico recebido:', payload);
       }
 
-      if (topic === 'clima/leituras') {
-        setHistorico(prev => {
-          const novo = [payload, ...prev];
-          const atualizado = novo
-            .filter((item, index, self) =>
-              index === self.findIndex(i => i.iso === item.iso)
-            )
-            .slice(0, 10);
+      if (['clima/temperatura', 'clima/umidade', 'clima/vento'].includes(topic)) {
+        const {valor, timestamp, iso} = payload;
+        const parcial = leituraParcialRef.current[iso] || { timestamp, iso};
 
-          climaSubject.notify(payload);
+        if(topic === 'clima/temperatura') parcial.temperatura = valor;
+        if(topic === 'clima/umidade') parcial.umidade = valor;
+        if(topic === 'clima/vento') parcial.vento = valor;
 
-          return atualizado;
-        });
-        console.log('[MQTT] Nova leitura recebida:', payload);
+        leituraParcialRef.current[iso] = parcial;
+
+        if ( parcial.temperatura !== undefined && parcial.umidade !== undefined && parcial.vento !== undefined) {
+          setHistorico(prev => {
+            const novo = [parcial, ...prev];
+            const atualizado = novo
+            .filter((item, index, self) => index === self.findIndex(i => i.iso === item.iso))
+            .slice(0,10);
+            climaSubject.notify(parcial);
+            return atualizado;
+          });
+          console.log('[MQTT] Nova leitura recebida');
+          delete leituraParcialRef.current[iso];
+        }
+        return;
       }
 
       if (subscriptions.current[topic]) {

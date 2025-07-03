@@ -1,5 +1,96 @@
 [
   {
+    "timestamp": "02/07/2025, 23:48:02",
+    "iso": "2025-07-03T02:48:02.756Z",
+    "temperatura": 17,
+    "umidade": 71,
+    "vento": 33
+  },
+  {
+    "timestamp": "02/07/2025, 23:47:02",
+    "iso": "2025-07-03T02:47:02.753Z",
+    "temperatura": 38,
+    "umidade": 19,
+    "vento": 20
+  },
+  {
+    "timestamp": "02/07/2025, 23:26:18",
+    "iso": "2025-07-03T02:26:18.158Z",
+    "temperatura": 13,
+    "umidade": 41,
+    "vento": 11
+  },
+  {
+    "timestamp": "02/07/2025, 23:25:18",
+    "iso": "2025-07-03T02:25:18.157Z",
+    "temperatura": 15,
+    "umidade": 73,
+    "vento": 21
+  },
+  {
+    "timestamp": "02/07/2025, 23:24:18",
+    "iso": "2025-07-03T02:24:18.151Z",
+    "temperatura": 18,
+    "umidade": 32,
+    "vento": 15
+  },
+  {
+    "timestamp": "02/07/2025, 23:23:18",
+    "iso": "2025-07-03T02:23:18.150Z",
+    "temperatura": 39,
+    "umidade": 79,
+    "vento": 33
+  },
+  {
+    "timestamp": "02/07/2025, 23:22:18",
+    "iso": "2025-07-03T02:22:18.150Z",
+    "temperatura": 15,
+    "umidade": 27,
+    "vento": 14
+  },
+  {
+    "timestamp": "02/07/2025, 23:21:18",
+    "iso": "2025-07-03T02:21:18.136Z",
+    "temperatura": 18,
+    "umidade": 62,
+    "vento": 1
+  },
+  {
+    "timestamp": "02/07/2025, 23:20:18",
+    "iso": "2025-07-03T02:20:18.130Z",
+    "temperatura": 37,
+    "umidade": 70,
+    "vento": 29
+  },
+  {
+    "timestamp": "02/07/2025, 23:19:18",
+    "iso": "2025-07-03T02:19:18.130Z",
+    "temperatura": 25,
+    "umidade": 66,
+    "vento": 25
+  },
+  {
+    "timestamp": "02/07/2025, 23:18:18",
+    "iso": "2025-07-03T02:18:18.123Z",
+    "temperatura": 22,
+    "umidade": 53,
+    "vento": 11
+  },
+  {
+    "timestamp": "02/07/2025, 23:17:18",
+    "iso": "2025-07-03T02:17:18.113Z",
+    "temperatura": 30,
+    "umidade": 53,
+    "vento": 16
+  },
+  {
+    "timestamp": "02/07/2025, 23:16:18",
+    "iso": "2025-07-03T02:16:18.104Z",
+    "temperatura": 12,
+    "umidade": 54,
+    "vento": 29
+  },
+  {
     "timestamp": "02/07/2025, 20:34:32",
     "iso": "2025-07-02T23:34:32.878Z",
     "temperatura": 34,
