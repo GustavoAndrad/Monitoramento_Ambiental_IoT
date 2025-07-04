@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { lerHistorico, salvarHistorico } = require('./historicoUtils');
+const { lerHistorico } = require('./historicoUtils');
 const HistSubscriber = require('./mqtt/HistSubscriber');
 
 const app = express();
@@ -8,7 +8,8 @@ const PORT = 5027;
 
 app.use(cors());
 
-new HistSubscriber();
+const subscriber = new HistSubscriber();
+subscriber.escutar();
 
 app.get('/historico', (req, res) => {
     try {

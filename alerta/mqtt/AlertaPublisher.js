@@ -27,35 +27,15 @@ class AlertaPublisher {
     });
   }
 
-  publicarNovaLeitura(leitura) {
-    const promessas = [];
+  async publicarAlerta(leitura) {
 
-    if (leitura.temperatura !== undefined) {
-      promessas.push(this.publicarSensor('clima/temperatura', {
-        valor: leitura.temperatura,
-        timestamp: leitura.timestamp,
-        iso: leitura.iso
-      }));
-    }
-
-    if (leitura.umidade !== undefined) {
-      promessas.push(this.publicarSensor('clima/umidade', {
-        valor: leitura.umidade,
-        timestamp: leitura.timestamp,
-        iso: leitura.iso
-      }));
-    }
-
-    if (leitura.vento !== undefined) {
-      promessas.push(this.publicarSensor('clima/vento', {
-        valor: leitura.vento,
-        timestamp: leitura.timestamp,
-        iso: leitura.iso
-      }));
-    }
-
-    return Promise.all(promessas);
+    return await this.publicarSensor('clima/alerta', {
+      valor: alerta.message,
+      timestamp: alerta.timestamp,
+      iso: alerta.iso
+    });
+    
   }
 }
 
-module.exports = PublisherMQTT;
+module.exports = AlertaPublisher;

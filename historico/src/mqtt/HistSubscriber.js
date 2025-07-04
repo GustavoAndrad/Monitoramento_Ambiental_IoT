@@ -13,11 +13,14 @@ class HistSubscriber{
       this.client.subscribe('clima/umidade');
       this.client.subscribe('clima/vento');
     });
+  }
 
+  escutar(){
     this.client.on('message', (topic, message) => {
       this.processarMensagem(topic, message);
     });
   }
+
   
   processarMensagem(topic, message) {
     try {
