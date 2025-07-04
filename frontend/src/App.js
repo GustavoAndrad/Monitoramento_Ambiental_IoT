@@ -106,7 +106,7 @@ const filtrarHistorico = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Painel do Clima</h1>
+        <h1>EcoTrack</h1>
         <h2>Rio de Janeiro</h2>
 
         {alertas.length > 0 && (
