@@ -1,6 +1,6 @@
-const mqtt = require('mqtt');
+import mqtt from 'mqtt';
 
-class BrokerConnectionSingleton {
+export default class BrokerConnectionSingleton {
   static instance = null;
 
   constructor() {
@@ -8,9 +8,15 @@ class BrokerConnectionSingleton {
       return BrokerConnectionSingleton.instance;
     }
 
-    this.client = mqtt.connect('mqtts://b35611364f10443eb840648d6c93f42d.s1.eu.hivemq.cloud', {
+    this.client = mqtt.connect('wss://b35611364f10443eb840648d6c93f42d.s1.eu.hivemq.cloud:8884/mqtt', {
       username: 'apsG5',
       password: 'Grupo5aps',
+      reconnectPeriod: 5000,
+    });
+
+    this.client.on('error', (err) => {
+      console.error('[MQTT] Connection error:', err);
+      this.client.end();
     });
 
     BrokerConnectionSingleton.instance = this;
@@ -23,5 +29,3 @@ class BrokerConnectionSingleton {
     return BrokerConnectionSingleton.instance.client;
   }
 }
-
-module.exports = BrokerConnectionSingleton;

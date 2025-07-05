@@ -26,30 +26,34 @@ class AlertaSubscriber{
     const payload = JSON.parse(message.toString());
     const { valor, iso, timestamp } = payload;
     const leitura = {
-      message: null,
+      mensagem: null,
+      sensor: null,
       timestamp,
       iso,
     }
     
     if (topic === 'clima/temperatura'){
-        if(valor<15){
-          leitura.message = '⚠️ Temperatura muito baixa! Atenção ao frio.';
-        } else if(valor>37){
-          leitura.message = '⚠️ Temperatura elevada! Risco de calor extremo.';
-        }
+      leitura.sensor = 'temperatura';
+      if(valor<15){
+        leitura.mensagem = '⚠️ Temperatura muito baixa! Atenção ao frio.';
+      } else if(valor>37){
+        leitura.mensagem = '⚠️ Temperatura elevada! Risco de calor extremo.';
+      }
     }
     else if (topic === 'clima/umidade'){
-        if(valor < 30){
-          leitura.message = '⚠️ ⚠️ Umidade do ar muito baixa! Risco à saúde respiratória.';
-        }
+      leitura.sensor = 'umidade';
+      if(valor < 30){
+        leitura.mensagem = '⚠️ Umidade do ar muito baixa! Risco à saúde respiratória.';
+      }
     }
     else if (topic === 'clima/vento'){
-        if(valor > 25){
-          leitura.message = '⚠️ Ventos fortes! Possíveis transtornos.';
-        }
+      leitura.sensor = 'vento';
+      if(valor > 25){
+        leitura.mensagem = '⚠️ Ventos fortes! Possíveis transtornos.';
+      }
     }
     
-    if(leitura.message){
+    if(leitura.mensagem){
       this.publisher.publicarAlerta(leitura)
     }  
   }

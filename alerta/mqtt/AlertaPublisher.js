@@ -27,13 +27,9 @@ class AlertaPublisher {
     });
   }
 
-  async publicarAlerta(leitura) {
+  async publicarAlerta(alerta) {
 
-    return await this.publicarSensor('clima/alerta', {
-      valor: alerta.message,
-      timestamp: alerta.timestamp,
-      iso: alerta.iso
-    });
+    return await this.publicarSensor('clima/alerta', alerta);
     
   }
 }

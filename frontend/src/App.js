@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { useAlertas } from './useAlertas.js';
 import { useMqtt } from './useMqtt.js';
 
 function App() {
-  const alertas = useAlertas();
-  const { ultimoDado } = useMqtt();
+  
+  const { ultimoDado, alertas } = useMqtt();
 
   //Busca o histórico no servidor (Sem MQTT)
   const [historico, setHistorico] = useState([]);
@@ -112,7 +111,7 @@ const filtrarHistorico = () => {
         {alertas.length > 0 && (
           <div className="alertas">
             {alertas.map((msg, idx) => (
-              <p key={idx}>{msg}</p>
+              <p key={idx}>{msg.mensagem}</p>
             ))}
           </div>
         )}
