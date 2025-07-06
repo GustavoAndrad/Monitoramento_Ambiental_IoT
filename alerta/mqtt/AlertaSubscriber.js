@@ -22,40 +22,55 @@ class AlertaSubscriber{
   }
 
   processarMensagem(topic, message) {
-
     const payload = JSON.parse(message.toString());
     const { valor, iso, timestamp } = payload;
     const leitura = {
       mensagem: null,
       sensor: null,
+      isAlerta: null,
       timestamp,
       iso,
     }
-    
-    if (topic === 'clima/temperatura'){
+
+    if (topic === 'clima/temperatura') {
       leitura.sensor = 'temperatura';
-      if(valor<15){
+      if (valor < 15) {
         leitura.mensagem = '⚠️ Temperatura muito baixa! Atenção ao frio.';
-      } else if(valor>37){
+        leitura.isAlerta = true;
+      } else if (valor > 37) {
         leitura.mensagem = '⚠️ Temperatura elevada! Risco de calor extremo.';
+        leitura.isAlerta = true;
+      } else {
+        leitura.mensagem = '✅ Temperatura normal.';
+        leitura.isAlerta = false;
       }
     }
-    else if (topic === 'clima/umidade'){
+
+    else if (topic === 'clima/umidade') {
       leitura.sensor = 'umidade';
-      if(valor < 30){
+      if (valor < 30) {
         leitura.mensagem = '⚠️ Umidade do ar muito baixa! Risco à saúde respiratória.';
+        leitura.isAlerta = true;
+      } else {
+        leitura.mensagem = '✅ Umidade em níveis saudáveis.';
+        leitura.isAlerta = false;
       }
     }
-    else if (topic === 'clima/vento'){
+
+    else if (topic === 'clima/vento') {
       leitura.sensor = 'vento';
-      if(valor > 25){
+      if (valor > 25) {
         leitura.mensagem = '⚠️ Ventos fortes! Possíveis transtornos.';
+        leitura.isAlerta = true;
+      } else {
+        leitura.mensagem = '✅ Velocidade do vento dentro do normal.';
+        leitura.isAlerta = false;
       }
     }
-    
-    if(leitura.mensagem){
-      this.publisher.publicarAlerta(leitura)
-    }  
+
+    if (leitura.sensor && leitura.mensagem) {
+      this.publisher.publicarAlerta(leitura);
+    }
   }
 }
 

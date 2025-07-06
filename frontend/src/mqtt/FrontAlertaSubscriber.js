@@ -16,14 +16,14 @@ export default class FrontAlertaSubscriber extends BaseMqttSubscriber {
 
     try {
       const alerta = JSON.parse(message.toString());
-      const { sensor, mensagem, timestamp } = alerta;
+      const { sensor, mensagem, isAlerta } = alerta;
       
       if (!sensor || !mensagem) {
         console.warn('[MQTT] [ALERTA] Alerta inválido:', alerta);
         return;
       }
 
-      this.alertasPorSensor[sensor] = { sensor, mensagem, timestamp };
+      this.alertasPorSensor[sensor] = { sensor, mensagem, isAlerta};
 
       const alertasArray = Object.values(this.alertasPorSensor);
       

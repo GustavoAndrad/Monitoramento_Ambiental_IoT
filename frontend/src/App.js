@@ -109,9 +109,18 @@ const filtrarHistorico = () => {
         <h2>Rio de Janeiro</h2>
 
         {alertas.length > 0 && (
-          <div className="alertas">
+          <div
+            className={`alertas ${
+              alertas.some(msg => msg?.isAlerta) ? 'alertas-alerta' : 'alertas-ok'
+            }`}
+          >
             {alertas.map((msg, idx) => (
-              <p key={idx}>{msg.mensagem}</p>
+              <p
+                key={idx}
+                className={msg?.isAlerta ? 'mensagem-alerta' : 'mensagem-ok'}
+              >
+                {msg.mensagem}
+              </p>
             ))}
           </div>
         )}

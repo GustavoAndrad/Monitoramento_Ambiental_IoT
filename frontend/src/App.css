@@ -76,7 +76,7 @@
   padding: 0.6rem 1rem;
   font-size: 0.95rem;
 }
-
+/*
 .alertas {
   color: #ff4d4d;
   background-color: #2d0000;
@@ -87,6 +87,36 @@
   width: 80%;
   font-weight: bold;
   font-size: 1rem;
+}*/
+.alertas {
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem auto;
+  width: 80%;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Quando há pelo menos um alerta ⚠️ */
+.alertas-alerta {
+  color: #ff4d4d;
+  background-color: #2d0000;
+  border: 1px solid #ff0000;
+}
+
+/* Quando todas as mensagens são ✅ */
+.alertas-ok {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  border: 1px solid #4caf50;
+}
+
+.mensagem-alerta {
+  color: #ff4d4d;
+}
+
+.mensagem-ok {
+  color: #2e7d32;
 }
 
 .mosaic-header {
